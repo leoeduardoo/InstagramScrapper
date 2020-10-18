@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class InstagramScrapperApplication {
 
-	public static void main(String[] args) throws InterruptedException {
-		SpringApplication.run(InstagramScrapperApplication.class, args);
-		Access.login();
-	}
+    public static void main(String[] args) throws InterruptedException {
+        SpringApplication.run(InstagramScrapperApplication.class, args);
+        Access.login();
+    }
 
 }

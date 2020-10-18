@@ -1,13 +1,15 @@
 package com.instascrapper.InstagramScrapper.service;
 
+import com.instascrapper.InstagramScrapper.common.SeleniumBrowser;
 import com.instascrapper.InstagramScrapper.utils.Console;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
 import com.instascrapper.InstagramScrapper.utils.Pair;
-import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class Access {
+/**
+ * This class is supposed to get credentials and log in
+ */
+public class Access extends SeleniumBrowser {
 
     private static String username;
     private static String password;
@@ -16,29 +18,33 @@ public class Access {
 
     public static void login() throws InterruptedException {
 
-        WebDriver driver = SeleniumBrowser.configureAndReturnChromeBrowserWebDriver();
+        SeleniumBrowser driver = new SeleniumBrowser();
 
-        SeleniumBrowser.minimize(driver);
+        driver.minimizeBrowser();
         getAndUpdateVariablesValuesAndUrls();
-        SeleniumBrowser.maximize(driver);
+        driver.maximizeBrowser();
 
-        driver.get(profileUrl);
+        driver.getDriver().get(profileUrl);
         waitSeconds(2);
-        driver.get(loginUrl);
+        driver.getDriver().get(loginUrl);
 
         waitSeconds(2);
-        WebElement usernameField = driver.findElement(InstagramXPaths.getUsernameFieldXPath());
+        WebElement usernameField = driver.getDriver().findElement(InstagramXPaths.getUsernameFieldXPath());
         usernameField.sendKeys(username);
 
         waitSeconds(2);
-        WebElement passwordField = driver.findElement(InstagramXPaths.getPasswordFieldXPath());
+        WebElement passwordField = driver.getDriver().findElement(InstagramXPaths.getPasswordFieldXPath());
         passwordField.sendKeys(password);
 
-        WebElement loginButton = driver.findElement(InstagramXPaths.getLoginButtonXPath());
+        WebElement loginButton = driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
         loginButton.click();
 
         waitSeconds(5);
-        driver.close();
+
+        driver.getDriver().get(profileUrl);
+        waitSeconds(2);
+
+        Profile.getProfileInfo();
 
     }
 
@@ -47,6 +53,7 @@ public class Access {
     }
 
     private static void getAndUpdateVariablesValuesAndUrls() {
+//      Pair<String, String> credentials = new Pair<>("", "");
         Pair<String, String> credentials = Console.getCredentials();
         username = credentials.getFirst();
         password = credentials.getSecond();

@@ -10,7 +10,7 @@ public class Console {
     public Console() {
     }
 
-    public static String getUsername() {
+    private static String getUsername() {
 
         if (console == null) {
             System.out.println("Couldn't open console. Exiting.");
@@ -37,4 +37,5 @@ public class Console {
     public static Pair<String, String> getCredentials() {
         return new Pair<>(getUsername(), getPassword());
     }
+
 }
