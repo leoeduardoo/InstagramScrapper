@@ -1,24 +1,30 @@
 package com.instascrapper.InstagramScrapper.service;
 
+import com.instascrapper.InstagramScrapper.utils.Console;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
 import com.instascrapper.InstagramScrapper.utils.Pair;
 import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import java.io.Console;
 
 public class Access {
 
+    private static String username;
+    private static String password;
+    private static String profileUrl;
+    private static String loginUrl;
+
     public static void login() throws InterruptedException {
 
-        String username = getUsername();
+        WebDriver driver = SeleniumBrowser.configureAndReturnChromeBrowserWebDriver();
 
-        System.setProperty(SeleniumBrowser.getBrowser(), SeleniumBrowser.getBrowserPath());
-        WebDriver driver = new ChromeDriver();
+        SeleniumBrowser.minimize(driver);
+        getAndUpdateVariablesValuesAndUrls();
+        SeleniumBrowser.maximize(driver);
 
-        driver.get("https://www.instagram.com/accounts/login/?next=%2F" + username + "%2F&source=desktop_nav");
+        driver.get(profileUrl);
+        waitSeconds(2);
+        driver.get(loginUrl);
 
         waitSeconds(2);
         WebElement usernameField = driver.findElement(InstagramXPaths.getUsernameFieldXPath());
@@ -26,7 +32,7 @@ public class Access {
 
         waitSeconds(2);
         WebElement passwordField = driver.findElement(InstagramXPaths.getPasswordFieldXPath());
-        passwordField.sendKeys(getPassword());
+        passwordField.sendKeys(password);
 
         WebElement loginButton = driver.findElement(InstagramXPaths.getLoginButtonXPath());
         loginButton.click();
@@ -36,53 +42,16 @@ public class Access {
 
     }
 
-    public static String getUsername() {
-
-        Console console = System.console();
-
-        if (console == null) {
-            System.out.println("Couldn't open console. Exiting.");
-            System.exit(0);
-        }
-
-        char[] usernameArray = console.readPassword("Enter your username: ");
-
-        return String.valueOf(usernameArray);
-    }
-
-    private static String getPassword() {
-
-        Console console = System.console();
-
-        if (console == null) {
-            System.out.println("Couldn't open console. Exiting.");
-            System.exit(0);
-        }
-
-        char[] passwordArray = console.readPassword("Enter your secret password: ");
-
-        return String.valueOf(passwordArray);
-    }
-
-    private static Pair<String, String> getCredentials() {
-
-        Console console = System.console();
-
-        if (console == null) {
-            System.out.println("Couldn't open console. Exiting.");
-            System.exit(0);
-        }
-
-        console.printf("Type your credentials%n");
-        char[] usernameArray = console.readPassword("Enter your username: ");
-        console.flush();
-        char[] passwordArray = console.readPassword("Enter your secret password: ");
-
-        return new Pair<>(String.valueOf(usernameArray), String.valueOf(passwordArray));
-    }
-
     private static void waitSeconds(Integer seconds) throws InterruptedException {
         Thread.sleep(seconds * 1000);
+    }
+
+    private static void getAndUpdateVariablesValuesAndUrls() {
+        Pair<String, String> credentials = Console.getCredentials();
+        username = credentials.getFirst();
+        password = credentials.getSecond();
+        profileUrl = "https://www.instagram.com/" + username;
+        loginUrl = "https://www.instagram.com/accounts/login/?next=%2F" + username + "%2F&source=desktop_nav";
     }
 
 }
