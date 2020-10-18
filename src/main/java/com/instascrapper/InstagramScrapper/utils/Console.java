@@ -1,5 +1,7 @@
 package com.instascrapper.InstagramScrapper.utils;
 
+import com.instascrapper.InstagramScrapper.model.Pair;
+
 public class Console {
 
     private static final java.io.Console console = System.console();

@@ -1,4 +1,4 @@
-package com.instascrapper.InstagramScrapper.utils;
+package com.instascrapper.InstagramScrapper.model;
 
 /**
  * Class to return a pair of values
