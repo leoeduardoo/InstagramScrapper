@@ -24,6 +24,7 @@ public class Console {
         return String.valueOf(usernameArray);
     }
 
+    //TODO get rid of this information (how?)
     private static String getPassword() {
 
         if (console == null) {

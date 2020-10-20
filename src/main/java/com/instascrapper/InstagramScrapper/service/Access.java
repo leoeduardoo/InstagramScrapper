@@ -1,9 +1,9 @@
 package com.instascrapper.InstagramScrapper.service;
 
 import com.instascrapper.InstagramScrapper.common.SeleniumBrowser;
+import com.instascrapper.InstagramScrapper.model.Pair;
 import com.instascrapper.InstagramScrapper.utils.Console;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
-import com.instascrapper.InstagramScrapper.model.Pair;
 import org.openqa.selenium.WebElement;
 
 /**
