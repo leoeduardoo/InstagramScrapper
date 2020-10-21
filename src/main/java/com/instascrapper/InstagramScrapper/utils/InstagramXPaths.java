@@ -13,6 +13,9 @@ public class InstagramXPaths {
     private static By usernameXPath;
     private static By followingXPath;
     private static By followersXPath;
+    private static By followingListBoxOpenXPath;
+    private static By followingListBoxXPath;
+    private static String userDataFromFollowingListXPathString;
 
     /**
      * So you can't instantiate
@@ -44,6 +47,19 @@ public class InstagramXPaths {
         return followersXPath;
     }
 
+    public static By getFollowingListBoxOpenXPath() {
+        return followingListBoxOpenXPath;
+    }
+
+    public static By getFollowingListBoxXPath() {
+        return followingListBoxXPath;
+    }
+
+    public static By getIndexedUserDataFromFollowingListXPath(int i) {
+        String xPathUpdatedWithIndex = userDataFromFollowingListXPathString.replace("$", String.valueOf(i));
+        return By.xpath(xPathUpdatedWithIndex);
+    }
+
     @Value("${instagram.xpath.usernameField}")
     public void setUsernameFieldXPath(String usernameFieldXPath) {
         InstagramXPaths.usernameFieldXPath = By.xpath(usernameFieldXPath);
@@ -72,6 +88,21 @@ public class InstagramXPaths {
     @Value("${instagram.xpath.followers}")
     public void setFollowersXPath(String followersXPath) {
         InstagramXPaths.followersXPath = By.xpath(followersXPath);
+    }
+
+    @Value("${instagram.xpath.followingListBoxOpen}")
+    public void setFollowingListBoxOpenXPath(String followingListBoxOpenXPath) {
+        InstagramXPaths.followingListBoxOpenXPath = By.xpath(followingListBoxOpenXPath);
+    }
+
+    @Value("${instagram.xpath.followingListBox}")
+    public void setFollowingListBoxXPath(String followingListBoxXPath) {
+        InstagramXPaths.followingListBoxXPath = By.xpath(followingListBoxXPath);
+    }
+
+    @Value("${instagram.xpath.userDataFromFollowingListXPath}")
+    public void setUserDataFromFollowingListXPathString(String userDataFromFollowingListXPath) {
+        InstagramXPaths.userDataFromFollowingListXPathString = userDataFromFollowingListXPath;
     }
 
 }

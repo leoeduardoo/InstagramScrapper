@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 /**
  * This class is supposed to get credentials and log in
  */
-public class Access extends SeleniumBrowser {
+public class AccessService extends SeleniumBrowser {
 
     private static String username;
     private static String password;
@@ -25,26 +25,26 @@ public class Access extends SeleniumBrowser {
         driver.maximizeBrowser();
 
         driver.getDriver().get(profileUrl);
-        waitSeconds(2);
+        waitSeconds(1);
         driver.getDriver().get(loginUrl);
 
-        waitSeconds(2);
+        waitSeconds(1);
         WebElement usernameField = driver.getDriver().findElement(InstagramXPaths.getUsernameFieldXPath());
         usernameField.sendKeys(username);
 
-        waitSeconds(2);
+        waitSeconds(1);
         WebElement passwordField = driver.getDriver().findElement(InstagramXPaths.getPasswordFieldXPath());
         passwordField.sendKeys(password);
 
         WebElement loginButton = driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
         loginButton.click();
 
-        waitSeconds(5);
+        waitSeconds(3);
 
         driver.getDriver().get(profileUrl);
-        waitSeconds(2);
+        waitSeconds(1);
 
-        Profile.getProfileInfo();
+        ProfileService.getProfileInfo();
 
     }
 
