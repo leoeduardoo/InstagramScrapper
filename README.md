@@ -5,12 +5,13 @@
 
   - Selenium
   - Spring
+  - Basic Javascript
 
 ### Installation and Execution
 
 Requires java JRE.
 
-Requires download of Chrome Driver at [Selenium Documentation](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/)
+Requires download of Chrome Driver at [Selenium Documentation](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/).
 
 Change `selenium.browserPath` tag at `application.properties` file with the path to `chromedriver.exe` you just downloaded. 
 
@@ -32,7 +33,10 @@ This application is currently being written. Check the next steps:
 | done | Get the full list of following |
 | done | Get only username from list of following |
 | done | Check if scroll is at bottom so don't scroll anymore |
-| done | Improve method getUnverifiedFollowingList() |
+| done | Improve method getUnverifiedFollowingUsernameList() |
+| done | Remove post owner username from list |
+| done | Comment username by username on post |
+| `to-do` | Check if following account is comercial |
 | `to-do` | Implement a database to store the data |
 | `to-do` | Make this application an RESTful API |
 | `to-do` | Treat errors properly |

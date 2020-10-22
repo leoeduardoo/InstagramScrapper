@@ -3,7 +3,6 @@ package com.instascrapper.InstagramScrapper.service;
 import com.instascrapper.InstagramScrapper.common.SeleniumBrowser;
 import com.instascrapper.InstagramScrapper.model.ProfileInfo;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
@@ -27,32 +26,29 @@ public class ProfileService extends SeleniumBrowser {
 
         SeleniumBrowser driver = new SeleniumBrowser();
 
-        waitSeconds(1);
+        waitInSeconds(1);
         WebElement usernameWebElement = driver.getDriver().findElement(InstagramXPaths.getUsernameXPath());
         String username = usernameWebElement.getText();
 
-        waitSeconds(1);
         WebElement followersWebElement = driver.getDriver().findElement(InstagramXPaths.getFollowersXPath());
         String followers = followersWebElement.getText().replaceAll("\\D+", "");
 
-        waitSeconds(1);
         WebElement followingWebElement = driver.getDriver().findElement(InstagramXPaths.getFollowingXPath());
         String following = followingWebElement.getText().replaceAll("\\D+", "");
 
         driver.getDriver().findElement(InstagramXPaths.getFollowingListBoxOpenXPath()).click();
-
-        waitSeconds(1);
+        waitInSeconds(2);
 
         WebElement followingListBox = driver.getDriver().findElement(InstagramXPaths.getFollowingListBoxXPath());
-
-        waitSeconds(1);
+//        waitSeconds(1);
 
         List<String> unverifiedFollowingUsernameList = getUnverifiedFollowingUsernameList(driver, followingListBox);
 
         //TODO store in a database
         ProfileInfo profileInfo = new ProfileInfo(username, Integer.parseInt(followers), Integer.parseInt(following), unverifiedFollowingUsernameList);
+        waitInSeconds(1);
 
-        waitSeconds(2);
+        CommentService.comment(profileInfo);
 
     }
 
@@ -66,12 +62,11 @@ public class ProfileService extends SeleniumBrowser {
             try {
 
                 WebElement followingUserData = driver.getDriver().findElement(InstagramXPaths.getIndexedUserDataFromFollowingListXPath(i));
-                checkUnverifiedAndAdd(unverifiedFollowingUsernameList, followingUserData);
+                checkIfUnverifiedAndAdd(unverifiedFollowingUsernameList, followingUserData);
                 scrollPageElement(driver, followingListBox);
                 i++;
 
             } catch (Exception e) {
-                e.printStackTrace();
                 stopFlag = true;
             }
         }
@@ -79,25 +74,24 @@ public class ProfileService extends SeleniumBrowser {
         return unverifiedFollowingUsernameList;
     }
 
-    private static void checkUnverifiedAndAdd(List<String> unverifiedFollowingUsernameList, WebElement followingData) {
+    private static void checkIfUnverifiedAndAdd(List<String> unverifiedFollowingUsernameList, WebElement followingData) {
         if (!followingData.getText().contains("Verificado")) {
-            unverifiedFollowingUsernameList.add(followingData.getText().substring(0, followingData.getText().indexOf("\n")));
+            unverifiedFollowingUsernameList.add("@"+followingData.getText().substring(0, followingData.getText().indexOf("\n")));
         }
     }
 
     private static void scrollPageElement(SeleniumBrowser driver, WebElement followingListBox) throws InterruptedException {
-        //TODO check if scroll is at bottom so don't scroll anymore
         Boolean stop = (boolean) ((JavascriptExecutor) driver.getDriver()).executeScript(scrollScript, followingListBox);
-        if(!stop){
-            waitMilliseconds(200);
+        if (!stop) {
+            waitInMilliseconds(200);
         }
     }
 
-    private static void waitSeconds(Integer seconds) throws InterruptedException {
-        Thread.sleep(seconds * 1000);
+    private static void waitInSeconds(Integer milliseconds) throws InterruptedException {
+        Thread.sleep(milliseconds * 1000);
     }
 
-    private static void waitMilliseconds(Integer milliseconds) throws InterruptedException {
+    private static void waitInMilliseconds(Integer milliseconds) throws InterruptedException {
         Thread.sleep(milliseconds);
     }
 
