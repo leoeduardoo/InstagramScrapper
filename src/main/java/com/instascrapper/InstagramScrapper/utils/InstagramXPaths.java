@@ -15,6 +15,9 @@ public class InstagramXPaths {
     private static By followersXPath;
     private static By followingListBoxOpenXPath;
     private static By followingListBoxXPath;
+    private static By commentTextAreaXPath;
+    private static By commentButtonXPath;
+    private static By postOwnerUsernameXPath;
     private static String userDataFromFollowingListXPathString;
 
     /**
@@ -53,6 +56,18 @@ public class InstagramXPaths {
 
     public static By getFollowingListBoxXPath() {
         return followingListBoxXPath;
+    }
+
+    public static By getCommentTextAreaXPath() {
+        return commentTextAreaXPath;
+    }
+
+    public static By getCommentButtonXPath() {
+        return commentButtonXPath;
+    }
+
+    public static By getPostOwnerUsernameXPath() {
+        return postOwnerUsernameXPath;
     }
 
     public static By getIndexedUserDataFromFollowingListXPath(int i) {
@@ -98,6 +113,21 @@ public class InstagramXPaths {
     @Value("${instagram.xpath.followingListBox}")
     public void setFollowingListBoxXPath(String followingListBoxXPath) {
         InstagramXPaths.followingListBoxXPath = By.xpath(followingListBoxXPath);
+    }
+
+    @Value("${instagram.xpath.commentTextArea}")
+    public void setCommentTextAreaXPath(String commentTextAreaXPath) {
+        InstagramXPaths.commentTextAreaXPath = By.xpath(commentTextAreaXPath);
+    }
+
+    @Value("${instagram.xpath.commentButton}")
+    public void setCommentButtonXPath(String commentButtonXPath) {
+        InstagramXPaths.commentButtonXPath = By.xpath(commentButtonXPath);
+    }
+
+    @Value("${instagram.xpath.postOwnerUsername}")
+    public void setPostOwnerUsernameXPath(String postOwnerUsernameXPath) {
+        InstagramXPaths.postOwnerUsernameXPath = By.xpath(postOwnerUsernameXPath);
     }
 
     @Value("${instagram.xpath.userDataFromFollowingListXPath}")

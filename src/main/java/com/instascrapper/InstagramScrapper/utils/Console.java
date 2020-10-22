@@ -19,9 +19,7 @@ public class Console {
             System.exit(0);
         }
 
-        char[] usernameArray = console.readPassword("Enter your username: ");
-
-        return String.valueOf(usernameArray);
+        return console.readLine("Enter your username: ");
     }
 
     //TODO get rid of this information (how?)
@@ -39,6 +37,16 @@ public class Console {
 
     public static Pair<String, String> getCredentials() {
         return new Pair<>(getUsername(), getPassword());
+    }
+
+    public static String getPostUrl(){
+
+        if (console == null) {
+            System.out.println("Couldn't open console. Exiting.");
+            System.exit(0);
+        }
+
+        return console.readLine("Enter the post url: ");
     }
 
 }

@@ -25,31 +25,27 @@ public class AccessService extends SeleniumBrowser {
         driver.maximizeBrowser();
 
         driver.getDriver().get(profileUrl);
-        waitSeconds(1);
+        waitInSeconds(1);
         driver.getDriver().get(loginUrl);
+        waitInSeconds(1);
 
-        waitSeconds(1);
         WebElement usernameField = driver.getDriver().findElement(InstagramXPaths.getUsernameFieldXPath());
         usernameField.sendKeys(username);
-
-        waitSeconds(1);
         WebElement passwordField = driver.getDriver().findElement(InstagramXPaths.getPasswordFieldXPath());
         passwordField.sendKeys(password);
 
         WebElement loginButton = driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
         loginButton.click();
-
-        waitSeconds(3);
+        waitInSeconds(3);
 
         driver.getDriver().get(profileUrl);
-        waitSeconds(1);
 
         ProfileService.getProfileInfo();
 
     }
 
-    private static void waitSeconds(Integer seconds) throws InterruptedException {
-        Thread.sleep(seconds * 1000);
+    private static void waitInSeconds(Integer milliseconds) throws InterruptedException {
+        Thread.sleep(milliseconds * 1000);
     }
 
     private static void getAndUpdateVariablesValuesAndUrls() {
