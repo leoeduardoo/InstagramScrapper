@@ -1,98 +1,52 @@
 package com.instascrapper.InstagramScrapper.service;
 
-import com.instascrapper.InstagramScrapper.common.SeleniumBrowser;
+import com.instascrapper.InstagramScrapper.entity.ProfileEntity;
+import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
+import com.instascrapper.InstagramScrapper.exception.ObjectNotFoundException;
+import com.instascrapper.InstagramScrapper.mapper.ProfileMapper;
 import com.instascrapper.InstagramScrapper.model.ProfileInfo;
-import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.instascrapper.InstagramScrapper.model.profile.ProfileDTO;
+import com.instascrapper.InstagramScrapper.repository.ProfileRepository;
+import com.instascrapper.InstagramScrapper.service.seleniumbrowserservice.SeleniumProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * This class is supposed to access profile page and populate ProfileInfo model
+ * This class is supposed to get profile info
  */
-public class ProfileService extends SeleniumBrowser {
+@Service
+public class ProfileService {
 
-    static String scrollScript =
-            "if(arguments[0].scrollTop != (arguments[0].scrollHeight - arguments[0].offsetHeight)) { " +
-                    "arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;" +
-                    "return false;" +
-                    "}else{" +
-                    "return true;" +
-                    "}";
+    @Autowired
+    private ProfileRepository profileRepository;
 
-    public static void getProfileInfo() throws InterruptedException {
+    @Autowired
+    private AccessService accessService;
 
-        SeleniumBrowser driver = new SeleniumBrowser();
 
-        waitInSeconds(1);
-        WebElement usernameWebElement = driver.getDriver().findElement(InstagramXPaths.getUsernameXPath());
-        String username = usernameWebElement.getText();
+    public ProfileDTO profile(String username) throws Exception {
 
-        WebElement followersWebElement = driver.getDriver().findElement(InstagramXPaths.getFollowersXPath());
-        String followers = followersWebElement.getText().replaceAll("\\D+", "");
+        RegisterEntity registerEntity = accessService.findRegisterByUsername(username);
 
-        WebElement followingWebElement = driver.getDriver().findElement(InstagramXPaths.getFollowingXPath());
-        String following = followingWebElement.getText().replaceAll("\\D+", "");
-
-        driver.getDriver().findElement(InstagramXPaths.getFollowingListBoxOpenXPath()).click();
-        waitInSeconds(2);
-
-        WebElement followingListBox = driver.getDriver().findElement(InstagramXPaths.getFollowingListBoxXPath());
-//        waitSeconds(1);
-
-        List<String> unverifiedFollowingUsernameList = getUnverifiedFollowingUsernameList(driver, followingListBox);
-
-        //TODO store in a database
-        ProfileInfo profileInfo = new ProfileInfo(username, Integer.parseInt(followers), Integer.parseInt(following), unverifiedFollowingUsernameList);
-        waitInSeconds(1);
-
-        CommentService.comment(profileInfo);
-
-    }
-
-    private static List<String> getUnverifiedFollowingUsernameList(SeleniumBrowser driver, WebElement followingListBox) {
-
-        List<String> unverifiedFollowingUsernameList = new ArrayList<>();
-        Boolean stopFlag = false;
-        int i = 1;
-
-        while (!stopFlag) {
-            try {
-
-                WebElement followingUserData = driver.getDriver().findElement(InstagramXPaths.getIndexedUserDataFromFollowingListXPath(i));
-                checkIfUnverifiedAndAdd(unverifiedFollowingUsernameList, followingUserData);
-                scrollPageElement(driver, followingListBox);
-                i++;
-
-            } catch (Exception e) {
-                stopFlag = true;
-            }
+        if (registerEntity == null) {
+            throw new ObjectNotFoundException(username);
         }
 
-        return unverifiedFollowingUsernameList;
+        ProfileInfo profileInfo = SeleniumProfileService.getProfileInfo(username);
+
+        ProfileEntity profileEntity = new ProfileEntity();
+        profileEntity.setUnverifiedFollowingUsernameList(profileInfo.getUnverifiedFollowingUsernameList());
+        profileEntity.setFollowers(profileInfo.getFollowers());
+        profileEntity.setFollowing(profileInfo.getFollowing());
+        profileEntity.setIdRegister(registerEntity.getId());
+
+        profileEntity = profileRepository.save(profileEntity);
+
+        return ProfileMapper.INSTANCE.mapToDTO(profileEntity);
     }
 
-    private static void checkIfUnverifiedAndAdd(List<String> unverifiedFollowingUsernameList, WebElement followingData) {
-        if (!followingData.getText().contains("Verificado")) {
-            unverifiedFollowingUsernameList.add("@"+followingData.getText().substring(0, followingData.getText().indexOf("\n")));
-        }
-    }
-
-    private static void scrollPageElement(SeleniumBrowser driver, WebElement followingListBox) throws InterruptedException {
-        Boolean stop = (boolean) ((JavascriptExecutor) driver.getDriver()).executeScript(scrollScript, followingListBox);
-        if (!stop) {
-            waitInMilliseconds(200);
-        }
-    }
-
-    private static void waitInSeconds(Integer milliseconds) throws InterruptedException {
-        Thread.sleep(milliseconds * 1000);
-    }
-
-    private static void waitInMilliseconds(Integer milliseconds) throws InterruptedException {
-        Thread.sleep(milliseconds);
+    protected ProfileEntity findProfileByIdRegister(Long idRegister) {
+        return profileRepository.findByIdRegister(idRegister).orElse(null);
     }
 
 }
