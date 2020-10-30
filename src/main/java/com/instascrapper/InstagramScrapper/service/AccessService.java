@@ -1,60 +1,61 @@
 package com.instascrapper.InstagramScrapper.service;
 
-import com.instascrapper.InstagramScrapper.common.SeleniumBrowser;
-import com.instascrapper.InstagramScrapper.model.Pair;
-import com.instascrapper.InstagramScrapper.utils.Console;
-import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
-import org.openqa.selenium.WebElement;
+import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
+import com.instascrapper.InstagramScrapper.exception.DuplicatedRegisterException;
+import com.instascrapper.InstagramScrapper.exception.InvalidObjectException;
+import com.instascrapper.InstagramScrapper.mapper.AccessMapper;
+import com.instascrapper.InstagramScrapper.model.register.RegisterDTO;
+import com.instascrapper.InstagramScrapper.repository.RegisterRepository;
+import com.instascrapper.InstagramScrapper.service.seleniumbrowserservice.SeleniumAccessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * This class is supposed to get credentials and log in
+ * This class is supposed to get credentials
  */
-public class AccessService extends SeleniumBrowser {
+@Service
+public class AccessService {
 
-    private static String username;
-    private static String password;
-    private static String profileUrl;
-    private static String loginUrl;
+    @Autowired
+    RegisterRepository registerRepository;
 
-    public static void login() throws InterruptedException {
+    public RegisterDTO register(RegisterDTO registerDTO) throws Exception {
 
-        SeleniumBrowser driver = new SeleniumBrowser();
+        validate(registerDTO);
 
-        driver.minimizeBrowser();
-        getAndUpdateVariablesValuesAndUrls();
-        driver.maximizeBrowser();
+        verifyDuplicated(registerDTO);
 
-        driver.getDriver().get(profileUrl);
-        waitInSeconds(1);
-        driver.getDriver().get(loginUrl);
-        waitInSeconds(1);
+        SeleniumAccessService.login(registerDTO);
 
-        WebElement usernameField = driver.getDriver().findElement(InstagramXPaths.getUsernameFieldXPath());
-        usernameField.sendKeys(username);
-        WebElement passwordField = driver.getDriver().findElement(InstagramXPaths.getPasswordFieldXPath());
-        passwordField.sendKeys(password);
+        RegisterEntity registerEntity = AccessMapper.INSTANCE.mapToEntity(registerDTO);
 
-        WebElement loginButton = driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
-        loginButton.click();
-        waitInSeconds(3);
+        registerEntity = save(registerEntity);
 
-        driver.getDriver().get(profileUrl);
+        return AccessMapper.INSTANCE.mapToDTO(registerEntity);
+    }
 
-        ProfileService.getProfileInfo();
+    private void verifyDuplicated(RegisterDTO registerDTO) {
+        if (findRegisterByUsername(registerDTO.getUsername()) != null) {
+            throw new DuplicatedRegisterException(registerDTO.getUsername());
+        }
+    }
+
+    protected RegisterEntity save(RegisterEntity registerEntity) {
+        return registerRepository.save(registerEntity);
+    }
+
+    private void validate(RegisterDTO registerDTO) {
+        String username = registerDTO.getUsername();
+        String password = registerDTO.getPassword();
+
+        if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+            throw new InvalidObjectException();
+        }
 
     }
 
-    private static void waitInSeconds(Integer milliseconds) throws InterruptedException {
-        Thread.sleep(milliseconds * 1000);
-    }
-
-    private static void getAndUpdateVariablesValuesAndUrls() {
-//      Pair<String, String> credentials = new Pair<>("", "");
-        Pair<String, String> credentials = Console.getCredentials();
-        username = credentials.getFirst();
-        password = credentials.getSecond();
-        profileUrl = "https://www.instagram.com/" + username;
-        loginUrl = "https://www.instagram.com/accounts/login/?next=%2F" + username + "%2F&source=desktop_nav";
+    protected RegisterEntity findRegisterByUsername(String username) {
+        return registerRepository.findByUsername(username).orElse(null);
     }
 
 }

@@ -1,16 +1,28 @@
-package com.instascrapper.InstagramScrapper.model;
+package com.instascrapper.InstagramScrapper.model.profile;
 
 import java.util.List;
 
-public class ProfileInfo {
+public class ProfileDTO {
+    private Long id;
+    private Long idRegister;
     private Integer followers;
     private Integer following;
     private List<String> unverifiedFollowingUsernameList;
 
-    public ProfileInfo(Integer followers, Integer following, List<String> unverifiedFollowingUsernameList) {
-        this.followers = followers;
-        this.following = following;
-        this.unverifiedFollowingUsernameList = unverifiedFollowingUsernameList;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getIdRegister() {
+        return idRegister;
+    }
+
+    public void setIdRegister(Long idRegister) {
+        this.idRegister = idRegister;
     }
 
     public Integer getFollowers() {
@@ -36,4 +48,5 @@ public class ProfileInfo {
     public void setUnverifiedFollowingUsernameList(List<String> unverifiedFollowingUsernameList) {
         this.unverifiedFollowingUsernameList = unverifiedFollowingUsernameList;
     }
+
 }
