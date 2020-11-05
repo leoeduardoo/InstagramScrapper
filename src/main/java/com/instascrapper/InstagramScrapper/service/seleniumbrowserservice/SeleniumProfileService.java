@@ -1,8 +1,9 @@
 package com.instascrapper.InstagramScrapper.service.seleniumbrowserservice;
 
-import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
+import com.instascrapper.InstagramScrapper.exception.NotSameUsername;
 import com.instascrapper.InstagramScrapper.model.ProfileInfo;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
+import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
@@ -25,6 +26,8 @@ public class SeleniumProfileService {
         driver.getDriver().get(profileUrl);
         waitInSeconds(3);
 
+        checkIfLoggedUserIsTheProvided(username, driver);
+
         WebElement followersWebElement = driver.getDriver().findElement(InstagramXPaths.getFollowersXPath());
         String followers = followersWebElement.getText().replaceAll("\\D+", "");
 
@@ -39,6 +42,16 @@ public class SeleniumProfileService {
         List<String> unverifiedFollowingUsernameList = getUnverifiedFollowingUsernameList(driver, followingListBox);
 
         return new ProfileInfo(Integer.parseInt(followers), Integer.parseInt(following), unverifiedFollowingUsernameList);
+    }
+
+    private static void checkIfLoggedUserIsTheProvided(String username, SeleniumBrowser driver) {
+
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconXPath()).click();
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconProfileButtonXPath()).click();
+
+        if (!driver.getDriver().getCurrentUrl().contains(username)) {
+            throw new NotSameUsername();
+        }
     }
 
     private static List<String> getUnverifiedFollowingUsernameList(SeleniumBrowser driver, WebElement followingListBox) {

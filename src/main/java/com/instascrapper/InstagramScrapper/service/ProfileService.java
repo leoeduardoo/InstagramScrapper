@@ -1,7 +1,8 @@
 package com.instascrapper.InstagramScrapper.service;
 
+import com.instascrapper.InstagramScrapper.entity.AccessEntity;
 import com.instascrapper.InstagramScrapper.entity.ProfileEntity;
-import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
+import com.instascrapper.InstagramScrapper.exception.DuplicatedProfileException;
 import com.instascrapper.InstagramScrapper.exception.ObjectNotFoundException;
 import com.instascrapper.InstagramScrapper.mapper.ProfileMapper;
 import com.instascrapper.InstagramScrapper.model.ProfileInfo;
@@ -26,11 +27,13 @@ public class ProfileService {
 
     public ProfileDTO profile(String username) throws Exception {
 
-        RegisterEntity registerEntity = accessService.findRegisterByUsername(username);
+        AccessEntity accessEntity = accessService.findRegisterByUsername(username);
 
-        if (registerEntity == null) {
+        if (accessEntity == null) {
             throw new ObjectNotFoundException(username);
         }
+
+        verifyDuplicated(accessEntity.getId());
 
         ProfileInfo profileInfo = SeleniumProfileService.getProfileInfo(username);
 
@@ -38,11 +41,17 @@ public class ProfileService {
         profileEntity.setUnverifiedFollowingUsernameList(profileInfo.getUnverifiedFollowingUsernameList());
         profileEntity.setFollowers(profileInfo.getFollowers());
         profileEntity.setFollowing(profileInfo.getFollowing());
-        profileEntity.setIdRegister(registerEntity.getId());
+        profileEntity.setIdRegister(accessEntity.getId());
 
         profileEntity = save(profileEntity);
 
         return ProfileMapper.INSTANCE.mapToDTO(profileEntity);
+    }
+
+    private void verifyDuplicated(Long idRegister) {
+        if (findProfileByIdRegister(idRegister) != null) {
+            throw new DuplicatedProfileException();
+        }
     }
 
     private ProfileEntity save(ProfileEntity profileEntity) {

@@ -1,7 +1,7 @@
 package com.instascrapper.InstagramScrapper.service;
 
+import com.instascrapper.InstagramScrapper.entity.AccessEntity;
 import com.instascrapper.InstagramScrapper.entity.ProfileEntity;
-import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
 import com.instascrapper.InstagramScrapper.mapper.ProfileMapper;
 import com.instascrapper.InstagramScrapper.model.comment.CommentDTO;
 import com.instascrapper.InstagramScrapper.model.profile.ProfileDTO;
@@ -23,11 +23,12 @@ public class CommentService {
 
     public void comment(CommentDTO commentDTO) throws InterruptedException {
 
-        RegisterEntity registerEntity = accessService.findRegisterByUsername(commentDTO.getUsername());
-        ProfileEntity profileEntity = profileService.findProfileByIdRegister(registerEntity.getId());
+        AccessEntity accessEntity = accessService.findRegisterByUsername(commentDTO.getUsername());
+
+        ProfileEntity profileEntity = profileService.findProfileByIdRegister(accessEntity.getId());
         ProfileDTO profileDTO = ProfileMapper.INSTANCE.mapToDTO(profileEntity);
 
-        SeleniumCommentService.comment(profileDTO, commentDTO.getPostUrl());
+        SeleniumCommentService.comment(profileDTO, commentDTO.getPostUrl(), accessEntity.getUsername());
 
     }
 

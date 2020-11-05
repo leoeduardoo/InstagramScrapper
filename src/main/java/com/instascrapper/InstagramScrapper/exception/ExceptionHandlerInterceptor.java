@@ -19,6 +19,11 @@ public class ExceptionHandlerInterceptor extends ResponseEntityExceptionHandler 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomExceptionSchema(ex.getMessage()));
     }
 
+    @ExceptionHandler(DuplicatedProfileException.class)
+    public final ResponseEntity<Object> duplicatedProfileException(DuplicatedProfileException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new CustomExceptionSchema(ex.getMessage()));
+    }
+
     @ExceptionHandler(InvalidObjectException.class)
     public final ResponseEntity<Object> invalidObjectException(InvalidObjectException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomExceptionSchema(ex.getMessage()));

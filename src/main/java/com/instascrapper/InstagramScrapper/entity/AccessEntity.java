@@ -3,7 +3,7 @@ package com.instascrapper.InstagramScrapper.entity;
 import javax.persistence.*;
 
 @Entity(name = "Register")
-public class RegisterEntity {
+public class AccessEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

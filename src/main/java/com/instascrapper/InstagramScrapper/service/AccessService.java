@@ -1,11 +1,11 @@
 package com.instascrapper.InstagramScrapper.service;
 
-import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
+import com.instascrapper.InstagramScrapper.entity.AccessEntity;
 import com.instascrapper.InstagramScrapper.exception.DuplicatedRegisterException;
 import com.instascrapper.InstagramScrapper.exception.InvalidObjectException;
 import com.instascrapper.InstagramScrapper.mapper.AccessMapper;
 import com.instascrapper.InstagramScrapper.model.access.AccessDTO;
-import com.instascrapper.InstagramScrapper.repository.RegisterRepository;
+import com.instascrapper.InstagramScrapper.repository.AccessRepository;
 import com.instascrapper.InstagramScrapper.service.seleniumbrowserservice.SeleniumAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class AccessService {
 
     @Autowired
-    RegisterRepository registerRepository;
+    AccessRepository accessRepository;
 
     public AccessDTO access(String username) throws Exception {
 
@@ -27,12 +27,12 @@ public class AccessService {
 
         verifyDuplicated(username);
 
-        RegisterEntity registerEntity = new RegisterEntity();
-        registerEntity.setUsername(username);
+        AccessEntity accessEntity = new AccessEntity();
+        accessEntity.setUsername(username);
 
-        registerEntity = save(registerEntity);
+        accessEntity = save(accessEntity);
 
-        return AccessMapper.INSTANCE.mapToDTO(registerEntity);
+        return AccessMapper.INSTANCE.mapToDTO(accessEntity);
     }
 
     private void verifyDuplicated(String username) {
@@ -41,8 +41,8 @@ public class AccessService {
         }
     }
 
-    protected RegisterEntity save(RegisterEntity registerEntity) {
-        return registerRepository.save(registerEntity);
+    protected AccessEntity save(AccessEntity accessEntity) {
+        return accessRepository.save(accessEntity);
     }
 
     private void validate(String username) {
@@ -53,8 +53,8 @@ public class AccessService {
 
     }
 
-    protected RegisterEntity findRegisterByUsername(String username) {
-        return registerRepository.findByUsername(username).orElse(null);
+    protected AccessEntity findRegisterByUsername(String username) {
+        return accessRepository.findByUsername(username).orElse(null);
     }
 
 }

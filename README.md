@@ -1,6 +1,6 @@
 # InstagramScrapper
 
-> This java application is supposed to access an instagram's profile `(given credentials)`
+> This Java application is supposed to access an instagram's profile `(given credentials)`
 >  and get its following list.
 >
 > The main purpose of this application is to use and improve techniques and knowledges that will be guided by Selenium use. In other words: the error treatment, project pattern, objects mapper, use of database and, of course, the creation of a RESTful API that is able to accomplish its goal (comment on instagram post). 
@@ -13,7 +13,7 @@
 
 ### Installation and Execution
 
-Requires java JRE.
+Requires Java JRE.
 
 Requires download of Chrome Driver at [Selenium Documentation](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/).
 
@@ -27,7 +27,7 @@ Run application.
 
 `localhost:8080/instagramscrapper/access?username=YOUR_USERNAME`
 
-> This endpoint uses the given username to access the login page and sign in 
+> This endpoint uses the given username to access the login page and sign in.
 
 ------------------------------------------------------------
 
@@ -35,7 +35,7 @@ Run application.
 
 `localhost:8080/instagramscrapper/profile?username=YOUR_USERNAME`
 
-> This endpoint uses the given username (now stored in the database) to get profile info (followers and following quantities and the full non verified following list)
+> This endpoint uses the given username (now stored in the database) to get profile info (followers and following quantities and the full non verified following list).
 
 ------------------------------------------------------------
 
@@ -43,7 +43,7 @@ Run application.
 
 `localhost:8080/instagramscrapper/comment`
 
-> This endpoint uses the given username and instagram post url to use the logged account to comment, following username by following username, successively
+> This endpoint uses the given username and instagram post url to use the logged account to comment successively.
 
 body:
 ```json
@@ -55,7 +55,7 @@ body:
 
 ### TO-DO
 
-This application is currently being written. Check the next steps:
+This application is ~~currently~~ done being written. Check the next steps:
 
 | Status | Implement detais |
 | ------ | ------ |
@@ -72,7 +72,15 @@ This application is currently being written. Check the next steps:
 | done | Remove bug where browser opens at start |
 | done | Treat errors properly |
 | done | Update Installation and Execution section |
-| done | Think about how to make the given password secure (do not store it! ) |
-| `in progress` | Map errors |
-| `to-do` | Incorporate Lombok |
-| `to-do` | Check if following account is commercial (maybe one day) |
+| done | Think about how to make the given password secure (do not store it!) |
+| done | Map errors |
+| `to-do` | ~~Incorporate Lombok (maybe one day)~~ |
+| `to-do` | ~~Check if following account is commercial (maybe one day)~~ |
+
+### Considerations
+
+> Data scrapping Instagram is difficult because you may never know how data is shown. For example: you can not predict when Instagram suggests people to follow on following list. When it does, the application crashes.
+> 
+> The main goal was to use selenium, which gave the scenario, to use and improve my knowledge. Thatʽs the reason because some logic (like storing data, asking for information you already have on payload) seens rubbish: this application is about using databases, RESTful api concepts, errors treatments and so on.
+> 
+> For now, the use of Lombok and checking if following account is commercial is postponed because I think I achieved my intent.
