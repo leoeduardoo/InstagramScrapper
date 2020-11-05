@@ -1,9 +1,8 @@
-package com.instascrapper.InstagramScrapper.model.register;
+package com.instascrapper.InstagramScrapper.model.access;
 
-public class RegisterDTO {
+public class AccessDTO {
     private Long id;
     private String username;
-    private String password;
 
     public Long getId() {
         return id;
@@ -19,14 +18,6 @@ public class RegisterDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }

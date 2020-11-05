@@ -24,4 +24,9 @@ public class ExceptionHandlerInterceptor extends ResponseEntityExceptionHandler 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomExceptionSchema(ex.getMessage()));
     }
 
+    @ExceptionHandler(NotSameUsername.class)
+    public final ResponseEntity<Object> notSameUsername(NotSameUsername ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomExceptionSchema(ex.getMessage()));
+    }
+
 }

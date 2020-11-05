@@ -4,14 +4,14 @@ import com.instascrapper.InstagramScrapper.entity.RegisterEntity;
 import com.instascrapper.InstagramScrapper.exception.DuplicatedRegisterException;
 import com.instascrapper.InstagramScrapper.exception.InvalidObjectException;
 import com.instascrapper.InstagramScrapper.mapper.AccessMapper;
-import com.instascrapper.InstagramScrapper.model.register.RegisterDTO;
+import com.instascrapper.InstagramScrapper.model.access.AccessDTO;
 import com.instascrapper.InstagramScrapper.repository.RegisterRepository;
 import com.instascrapper.InstagramScrapper.service.seleniumbrowserservice.SeleniumAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * This class is supposed to get credentials
+ * This class is supposed to sign in
  */
 @Service
 public class AccessService {
@@ -19,24 +19,25 @@ public class AccessService {
     @Autowired
     RegisterRepository registerRepository;
 
-    public RegisterDTO register(RegisterDTO registerDTO) throws Exception {
+    public AccessDTO access(String username) throws Exception {
 
-        validate(registerDTO);
+        validate(username);
 
-        verifyDuplicated(registerDTO);
+        SeleniumAccessService.login(username);
 
-        SeleniumAccessService.login(registerDTO);
+        verifyDuplicated(username);
 
-        RegisterEntity registerEntity = AccessMapper.INSTANCE.mapToEntity(registerDTO);
+        RegisterEntity registerEntity = new RegisterEntity();
+        registerEntity.setUsername(username);
 
         registerEntity = save(registerEntity);
 
         return AccessMapper.INSTANCE.mapToDTO(registerEntity);
     }
 
-    private void verifyDuplicated(RegisterDTO registerDTO) {
-        if (findRegisterByUsername(registerDTO.getUsername()) != null) {
-            throw new DuplicatedRegisterException(registerDTO.getUsername());
+    private void verifyDuplicated(String username) {
+        if (findRegisterByUsername(username) != null) {
+            throw new DuplicatedRegisterException(username);
         }
     }
 
@@ -44,11 +45,9 @@ public class AccessService {
         return registerRepository.save(registerEntity);
     }
 
-    private void validate(RegisterDTO registerDTO) {
-        String username = registerDTO.getUsername();
-        String password = registerDTO.getPassword();
+    private void validate(String username) {
 
-        if (username == null || password == null || username.trim().isEmpty() || password.trim().isEmpty()) {
+        if (username == null || username.trim().isEmpty()) {
             throw new InvalidObjectException();
         }
 
