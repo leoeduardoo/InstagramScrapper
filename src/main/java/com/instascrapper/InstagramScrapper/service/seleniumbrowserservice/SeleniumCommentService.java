@@ -1,5 +1,6 @@
 package com.instascrapper.InstagramScrapper.service.seleniumbrowserservice;
 
+import com.instascrapper.InstagramScrapper.exception.NotSameUsername;
 import com.instascrapper.InstagramScrapper.model.profile.ProfileDTO;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
 import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class SeleniumCommentService extends SeleniumBrowser {
 
-    public static void comment(ProfileDTO profileDTO, String postUrl) throws InterruptedException {
+    public static void comment(ProfileDTO profileDTO, String postUrl, String username) throws InterruptedException {
 
         SeleniumBrowser driver = new SeleniumBrowser();
         waitInSeconds(3);
@@ -22,10 +23,22 @@ public class SeleniumCommentService extends SeleniumBrowser {
         driver.getDriver().get(postUrl);
         waitInSeconds(3);
 
+        checkIfLoggedUserIsTheProvided(username, driver);
+
         List<String> unverifiedFollowingUsernameWithoutPostOwnerUsernameList = removePostOwnerUsernameFromList(profileDTO, driver);
 
         comment(unverifiedFollowingUsernameWithoutPostOwnerUsernameList, driver);
 
+    }
+
+    private static void checkIfLoggedUserIsTheProvided(String username, SeleniumBrowser driver) {
+
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconXPath()).click();
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconProfileButtonXPath()).click();
+
+        if (!driver.getDriver().getCurrentUrl().contains(username)) {
+            throw new NotSameUsername();
+        }
     }
 
     private static List<String> removePostOwnerUsernameFromList(ProfileDTO profileDTO, SeleniumBrowser driver) {
