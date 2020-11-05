@@ -40,9 +40,13 @@ public class ProfileService {
         profileEntity.setFollowing(profileInfo.getFollowing());
         profileEntity.setIdRegister(registerEntity.getId());
 
-        profileEntity = profileRepository.save(profileEntity);
+        profileEntity = save(profileEntity);
 
         return ProfileMapper.INSTANCE.mapToDTO(profileEntity);
+    }
+
+    private ProfileEntity save(ProfileEntity profileEntity) {
+        return profileRepository.save(profileEntity);
     }
 
     protected ProfileEntity findProfileByIdRegister(Long idRegister) {

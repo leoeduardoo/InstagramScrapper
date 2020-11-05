@@ -1,42 +1,76 @@
 package com.instascrapper.InstagramScrapper.service.seleniumbrowserservice;
 
-import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
-import com.instascrapper.InstagramScrapper.model.register.RegisterDTO;
+import com.instascrapper.InstagramScrapper.exception.NotSameUsername;
 import com.instascrapper.InstagramScrapper.utils.InstagramXPaths;
+import com.instascrapper.InstagramScrapper.utils.SeleniumBrowser;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
- * This class is supposed to use browser to get credentials
+ * This class is supposed to use browser to sign in
  */
 public class SeleniumAccessService {
 
     private static String profileUrl;
     private static String loginUrl;
 
-    public static void login(RegisterDTO registerDTO) throws InterruptedException {
+    public static void login(String username) throws InterruptedException {
 
         SeleniumBrowser driver = new SeleniumBrowser();
-//        driver.maximizeBrowser();
 
-        updateVariablesAndUrl(registerDTO.getUsername());
+        updateVariablesAndUrl(username);
 
         driver.getDriver().get(profileUrl);
         waitInSeconds(3);
-        driver.getDriver().get(loginUrl);
-        waitInSeconds(3);
+
+        checkIfAlreadyLogged(driver);
 
         WebElement usernameField = driver.getDriver().findElement(InstagramXPaths.getUsernameFieldXPath());
-        usernameField.sendKeys(registerDTO.getUsername());
-        WebElement passwordField = driver.getDriver().findElement(InstagramXPaths.getPasswordFieldXPath());
-        passwordField.sendKeys(registerDTO.getPassword());
+        usernameField.sendKeys(username);
 
-        WebElement loginButton = driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
-        loginButton.click();
+        checkLoginButtonClicked(driver);
         waitInSeconds(3);
+
+        checkIfLoggedUserIsTheProvided(username, driver);
 
         driver.getDriver().get(profileUrl);
         waitInSeconds(3);
 
+    }
+
+    private static void checkIfLoggedUserIsTheProvided(String username, SeleniumBrowser driver) {
+
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconXPath()).click();
+        driver.getDriver().findElement(InstagramXPaths.getProfileIconProfileButtonXPath()).click();
+
+        if (!driver.getDriver().getCurrentUrl().contains(username)) {
+            throw new NotSameUsername();
+        }
+    }
+
+    private static void checkIfAlreadyLogged(SeleniumBrowser driver) throws InterruptedException {
+
+        try {
+            driver.getDriver().findElement(InstagramXPaths.getProfileIconXPath()).click();
+            driver.getDriver().findElement(InstagramXPaths.getProfileIconExitButtonXPath()).click();
+            waitInSeconds(3);
+        } catch (NoSuchElementException e) {
+            driver.getDriver().get(loginUrl);
+            waitInSeconds(3);
+        }
+    }
+
+    private static void checkLoginButtonClicked(SeleniumBrowser driver) {
+
+        boolean loggedIn = false;
+
+        while (!loggedIn) {
+            try {
+                driver.getDriver().findElement(InstagramXPaths.getLoginButtonXPath());
+            } catch (NoSuchElementException ex) {
+                loggedIn = true;
+            }
+        }
     }
 
     private static void waitInSeconds(Integer milliseconds) throws InterruptedException {

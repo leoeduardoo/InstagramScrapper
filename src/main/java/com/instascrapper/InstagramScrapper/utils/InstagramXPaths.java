@@ -4,11 +4,13 @@ import org.openqa.selenium.By;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class has all XPaths address used
+ */
 @Component
 public class InstagramXPaths {
 
     private static By usernameFieldXPath;
-    private static By passwordFieldXPath;
     private static By loginButtonXPath;
     private static By usernameXPath;
     private static By followingXPath;
@@ -18,6 +20,9 @@ public class InstagramXPaths {
     private static By commentTextAreaXPath;
     private static By commentButtonXPath;
     private static By postOwnerUsernameXPath;
+    private static By profileIconXPath;
+    private static By profileIconExitButtonXPath;
+    private static By profileIconProfileButtonXPath;
     private static String userDataFromFollowingListXPathString;
 
     /**
@@ -28,10 +33,6 @@ public class InstagramXPaths {
 
     public static By getUsernameFieldXPath() {
         return usernameFieldXPath;
-    }
-
-    public static By getPasswordFieldXPath() {
-        return passwordFieldXPath;
     }
 
     public static By getLoginButtonXPath() {
@@ -70,6 +71,18 @@ public class InstagramXPaths {
         return postOwnerUsernameXPath;
     }
 
+    public static By getProfileIconXPath() {
+        return profileIconXPath;
+    }
+
+    public static By getProfileIconExitButtonXPath() {
+        return profileIconExitButtonXPath;
+    }
+
+    public static By getProfileIconProfileButtonXPath() {
+        return profileIconProfileButtonXPath;
+    }
+
     public static By getIndexedUserDataFromFollowingListXPath(int i) {
         String xPathUpdatedWithIndex = userDataFromFollowingListXPathString.replace("$", String.valueOf(i));
         return By.xpath(xPathUpdatedWithIndex);
@@ -78,11 +91,6 @@ public class InstagramXPaths {
     @Value("${instagram.xpath.usernameField}")
     public void setUsernameFieldXPath(String usernameFieldXPath) {
         InstagramXPaths.usernameFieldXPath = By.xpath(usernameFieldXPath);
-    }
-
-    @Value("${instagram.xpath.passwordField}")
-    public void setPasswordFieldXPath(String passwordFieldXPath) {
-        InstagramXPaths.passwordFieldXPath = By.xpath(passwordFieldXPath);
     }
 
     @Value("${instagram.xpath.loginButton}")
@@ -128,6 +136,21 @@ public class InstagramXPaths {
     @Value("${instagram.xpath.postOwnerUsername}")
     public void setPostOwnerUsernameXPath(String postOwnerUsernameXPath) {
         InstagramXPaths.postOwnerUsernameXPath = By.xpath(postOwnerUsernameXPath);
+    }
+
+    @Value("${instagram.xpath.profileIcon}")
+    public void setProfileIconXPath(String profileIconXPath) {
+        InstagramXPaths.profileIconXPath = By.xpath(profileIconXPath);
+    }
+
+    @Value("${instagram.xpath.profileIconExitButton}")
+    public void setProfileIconExitButtonXPath(String profileIconExitButtonXPath) {
+        InstagramXPaths.profileIconExitButtonXPath = By.xpath(profileIconExitButtonXPath);
+    }
+
+    @Value("${instagram.xpath.profileIconProfileButton}")
+    public void setProfileIconProfileButtonXPath(String profileIconProfileButtonXPath) {
+        InstagramXPaths.profileIconProfileButtonXPath = By.xpath(profileIconProfileButtonXPath);
     }
 
     @Value("${instagram.xpath.userDataFromFollowingListXPath}")

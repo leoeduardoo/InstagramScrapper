@@ -47,7 +47,7 @@ public class SeleniumCommentService extends SeleniumBrowser {
             commentTextArea.sendKeys(unverifiedFollowingUsername);
             commentButton.click();
 
-            waitIntervalRandomlyInSeconds(5, 10);
+            waitIntervalRandomlyInSeconds(70, 80);
         }
     }
 

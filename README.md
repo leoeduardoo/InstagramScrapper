@@ -9,7 +9,7 @@
   - Spring
   - Basic Javascript
   - Facade Pattern
-  - H2 database
+  - H2 Database
 
 ### Installation and Execution
 
@@ -19,11 +19,38 @@ Requires download of Chrome Driver at [Selenium Documentation](https://www.selen
 
 Change `selenium.browserPath` tag at `application.properties` file with the path to `chromedriver.exe` you just downloaded. 
 
-Run the following commands:
+Run application.
 
-```sh
-$ cd path_to_folder_target
-$ javar -jar InstagramScrapper-0.0.1-SNAPSHOT.jar
+### Endpoints 
+
+##### Sign in (GET):
+
+`localhost:8080/instagramscrapper/access?username=YOUR_USERNAME`
+
+> This endpoint uses the given username to access the login page and sign in 
+
+------------------------------------------------------------
+
+##### Get profile info (GET):
+
+`localhost:8080/instagramscrapper/profile?username=YOUR_USERNAME`
+
+> This endpoint uses the given username (now stored in the database) to get profile info (followers and following quantities and the full non verified following list)
+
+------------------------------------------------------------
+
+##### Comment (POST):
+
+`localhost:8080/instagramscrapper/comment`
+
+> This endpoint uses the given username and instagram post url to use the logged account to comment, following username by following username, successively
+
+body:
+```json
+{
+    "username":"YOUR_USERNAME",
+    "postUrl":"INSTAGRAM_POST_URL"
+}
 ```
 
 ### TO-DO
@@ -44,8 +71,8 @@ This application is currently being written. Check the next steps:
 | done | Make this application an RESTful API |
 | done | Remove bug where browser opens at start |
 | done | Treat errors properly |
+| done | Update Installation and Execution section |
+| done | Think about how to make the given password secure (do not store it! ) |
 | `in progress` | Map errors |
-| `to-do` | Update Installation and Execution section |
 | `to-do` | Incorporate Lombok |
-| `to-do` | Check if following account is comercial |
-| `to-do` | Think about how to make the given password secure |
+| `to-do` | Check if following account is commercial (maybe one day) |
