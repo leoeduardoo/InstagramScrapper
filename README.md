@@ -7,9 +7,9 @@
 
   - Selenium
   - Spring
-  - Basic Javascript
+  - Basic JavaScript
   - Facade Pattern
-  - H2 Database
+  - H2 Database, JPA-Hibernate
 
 ### Installation and Execution
 
