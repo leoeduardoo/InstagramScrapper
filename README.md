@@ -81,6 +81,6 @@ This application is ~~currently~~ done being written. Check the next steps:
 
 > Data scrapping Instagram is difficult because you may never know how data is shown. For example: you can not predict when Instagram suggests people to follow on following list. When it does, the application crashes.
 > 
-> The main goal was to use selenium, which gave the scenario, to use and improve my knowledge. Thatʽs the reason because some logic (like storing data, asking for information you already have on payload) seens rubbish: this application is about using databases, RESTful api concepts, errors treatments and so on.
+> The main goal was to use selenium to use and improve my knowledge. Thatʽs the reason because some logic (like storing data, asking for information you already have on payload) may seens rubbish: this application is about using selenium, databases, RESTful api concepts, errors treatments and so on.
 > 
-> For now, the use of Lombok and checking if following account is commercial is postponed because I think I achieved my intent.
+> For now, the use of Lombok and checking if a following account is commercial is postponed because I think I achieved my intent.
